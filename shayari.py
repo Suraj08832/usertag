@@ -6,8 +6,7 @@ from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.errors import UserNotParticipant
 from pyrogram.types import ChatPermissions
 from zefron.utils.RAUSHAN_ban import admin_filter
-
-spam_chats = []
+from utils import spam_chats
 
 EMOJI = [ "🦋🦋🦋🦋🦋",
           "🧚🌸🧋🍬🫖",
@@ -124,10 +123,10 @@ async def mentionall(client, message):
 
 #
 
-@app.on_message(filters.command(["shstop", "shayarioff"]))
+@app.on_message(filters.command(["cancel", "shstop", "shayarioff"]))
 async def cancel_spam(client, message):
     if not message.chat.id in spam_chats:
-        return await message.reply("𝐂𝐮𝐫𝐫𝐞𝐧𝐭𝐥𝐲 𝐈'𝐦 𝐍𝐨𝐭 ..")
+        return await message.reply("**No tagging process is currently running in this chat.**")
     is_admin = False
     try:
         participant = await client.get_chat_member(message.chat.id, message.from_user.id)
@@ -140,13 +139,13 @@ async def cancel_spam(client, message):
         ):
             is_admin = True
     if not is_admin:
-        return await message.reply("𝐘𝐨𝐮 𝐀𝐫𝐞 𝐍𝐨𝐭 𝐀𝐝𝐦𝐢𝐧 𝐁𝐚𝐛𝐲, 𝐎𝐧𝐥𝐲 𝐀𝐝𝐦𝐢𝐧𝐬 𝐂𝐚𝐧 𝐓𝐚𝐠 𝐌𝐞𝐦𝐛𝐞𝐫𝐬.")
+        return await message.reply("**You are not an admin. Only admins can stop the tagging process.**")
     else:
         try:
             spam_chats.remove(message.chat.id)
         except:
             pass
-        return await message.reply("♦ ᴘʀᴏᴄᴇss sᴛᴏᴘᴘᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ ♦")
+        return await message.reply("**Tagging process stopped successfully!**")
 
 @app.on_message(filters.command("shayari") & filters.group & admin_filter)
 async def shayari_tag(_, message):

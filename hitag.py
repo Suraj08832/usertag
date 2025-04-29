@@ -6,8 +6,7 @@ from pyrogram.enums import ChatType, ChatMemberStatus
 from pyrogram.errors import UserNotParticipant
 from pyrogram.types import ChatPermissions
 from zefron.utils.RAUSHAN_ban import admin_filter
-
-spam_chats = []
+from utils import spam_chats
 
 EMOJI = [ "🦋🦋🦋🦋🦋",
           "🧚🌸🧋🍬🫖",
@@ -125,15 +124,15 @@ TAGMES = [ " **❅ बेबी कहा हो। 🤗** ",
            " **❅ कहा busy the इतने दिनों से 🥲** ",
            " **❅ single हो या mingle 😉** ",
            " **❅ आओ पार्टी करते है 🥳** ",
-           " **❅ join कर लो @WORLD_ALPHA 🧐** ",
+           " **❅ join कर लो @CHAMBER_OF_HEART 🧐** ",
            " **❅ मैं तुमसे प्यार नहीं करती, 🥺** ",
-           " **❅ यहां आ जाओ ना @PURVI_SUPPORT मस्ती करेंगे 🤭** ",
+           " **❅ यहां आ जाओ ना @COH_MUSIC_GC मस्ती करेंगे 🤭** ",
            " **❅ भूल जाओ मुझे,..? 😊** ",
            " **❅ अपना बना ले पिया, अपना बना ले 🥺** ",
            " **❅ मेरा ग्रुप भी join कर लो ना 🤗** ",
            " **❅ मैने तेरा नाम Dil rakh diya 😗** ",
            " **❅ तुमारे सारे दोस्त कहा गए 🥺** ",
-           " **❅ my cute owner @ll_ALPHA_BABY_lll 🥰** ",
+           " **❅ my cute owner @crush_hu_teri 🥰** ",
            " **❅ किसकी याद मे खोए हो जान 😜** ",
            " **❅ गुड नाईट जी बहुत रात हो गई 🥰** ",
            ]
@@ -213,7 +212,7 @@ VC_TAG = [ "**❅ ɪғ ʏᴏᴜ ᴅᴏ ɴᴏᴛ sᴛᴇᴘ ғᴏʀᴡᴀʀᴅ ʏ
         ]
 
 
-@app.on_message(filters.command("hi") & filters.group & admin_filter)
+@app.on_message(filters.command(["hi", "hitag"], prefixes=["/", "@", "#"]))
 async def hi_tag(_, message):
     try:
         if len(message.command) < 2:
@@ -229,14 +228,14 @@ async def hi_tag(_, message):
                 usertxt += f"✨ [{member.user.first_name}](tg://user?id={member.user.id})\n"
                 
                 if usernum == 5:
-                    hi_msg = f"👋 **Hello Everyone**\n\n{text}\n\n{usertxt}"
+                    hi_msg = f"{random.choice(TAGMES)}\n\n{text}\n\n{usertxt}"
                     await app.send_message(message.chat.id, hi_msg)
                     await asyncio.sleep(2)
                     usernum = 0
                     usertxt = ""
                     
         if usertxt != "":
-            hi_msg = f"👋 **Hello Everyone**\n\n{text}\n\n{usertxt}"
+            hi_msg = f"{random.choice(TAGMES)}\n\n{text}\n\n{usertxt}"
             await app.send_message(message.chat.id, hi_msg)
             
     except Exception as e:
@@ -351,7 +350,7 @@ async def mention_allvc(client, message):
 @app.on_message(filters.command(["cancel", "histop", "lifestop"]))
 async def cancel_spam(client, message):
     if not message.chat.id in spam_chats:
-        return await message.reply("๏ ᴄᴜʀʀᴇɴᴛʟʏ ɪ'ᴍ ɴᴏᴛ ᴛᴀɢɢɪɴɢ ʙᴀʙʏ.")
+        return await message.reply("**No tagging process is currently running in this chat.**")
     is_admin = False
     try:
         participant = await client.get_chat_member(message.chat.id, message.from_user.id)
@@ -364,10 +363,10 @@ async def cancel_spam(client, message):
         ):
             is_admin = True
     if not is_admin:
-        return await message.reply("๏ ʏᴏᴜ ᴀʀᴇ ɴᴏᴛ ᴀᴅᴍɪɴ ʙᴀʙʏ, ᴏɴʟʏ ᴀᴅᴍɪɴs ᴄᴀɴ ᴛᴀɢ ᴍᴇᴍʙᴇʀs.")
+        return await message.reply("**You are not an admin. Only admins can stop the tagging process.**")
     else:
         try:
             spam_chats.remove(message.chat.id)
         except:
             pass
-        return await message.reply("๏ ᴘʀᴏᴄᴇss sᴛᴏᴘᴘᴇᴅ sᴜᴄᴄᴇssғᴜʟʟʏ ๏")
+        return await message.reply("**Tagging process stopped successfully!**")
